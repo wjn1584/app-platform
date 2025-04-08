@@ -4,9 +4,9 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Modal, Spin } from 'antd';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { getAppInfo, getPublishAppId, getPreviewAppInfo } from '@/shared/http/aipp';
 import { setAppId, setAppInfo, setAippId, setAppVersion } from '@/store/appInfo/appInfo';
 import { setHistorySwitch } from '@/store/common/common';
@@ -16,6 +16,7 @@ import { setInspirationOpen } from '@/store/chatStore/chatStore';
 import { storage } from '@/shared/storage';
 import { useTranslation } from 'react-i18next';
 import { findConfigValue } from '@/shared/utils/common';
+import usePlugin from '@/shared/hooks/usePlugin';
 import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
 import CommonChat from '../chatPreview/chatComminPage';
 import Login from './login';
@@ -30,6 +31,7 @@ import './index.scoped..scss';
  */
 const ChatRunning = () => {
   const { t } = useTranslation();
+  const history = useHistory();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isPreview, setIsPreview] = useState(false);
@@ -40,6 +42,9 @@ const ChatRunning = () => {
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const loginStatus = useAppSelector((state) => state.chatCommonStore.loginStatus);
   const noAuth = useAppSelector((state) => state.chatCommonStore.noAuth);
+
+  // 插件不显示app name，可能遮挡插件内容，仅留返回按钮
+  const plugin = usePlugin();
 
   // 获取publishId
   const getPublishId = async () => {
@@ -159,7 +164,17 @@ const ChatRunning = () => {
     if (!loginStatus) {
       setLogin(false);
     }
-  }, [loginStatus])
+  }, [loginStatus]);
+
+  // 插件中可能调用history.push，导致无法返回应用市场
+  const handleBack = () => {
+    if (plugin) {
+      history.push({ pathname: '/app' });
+    } else {
+      history.goBack();
+    }
+  };
+
   return (
     <Spin spinning={loading}>
       { noAuth ? 
@@ -168,8 +183,8 @@ const ChatRunning = () => {
         </div> :  
         <div className={`chat-running-container ${isPreview ? 'chat-running-full' : ''}`}>
           {isPreview ? <Login login={login} /> : <div className='chat-running-chat'>
-            <Button type='text' onClick={() => { window.history.back() }}>{t('return')}</Button>
-            <span className='running-app-name'>{appInfo.name}</span>
+            <Button type='text' onClick={handleBack}>{t('return')}</Button>
+            {plugin ? null : <span className='running-app-name'>{appInfo.name}</span>}
           </div>}
           <CommonChat  />
           <Modal

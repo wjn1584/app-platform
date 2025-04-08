@@ -71,11 +71,19 @@ const Apps: React.FC = () => {
   function clickCard(item: any, e: any) {
     let id = item.runnables?.APP?.appId;
     let aippId = item.runnables?.APP?.aippId;
+
+    let url = `/app/${tenantId}/chat/${id}`;
     if (aippId) {
-      navigate(`/app/${tenantId}/chat/${id}/${aippId}`);
-    } else {
-      navigate(`/app/${tenantId}/chat/${id}`);
+      url += `/${aippId}`;
     }
+
+    // TODO：根据后端接口判断是否进入不同应用
+    const isRui = item.modifier === 'admin';
+    if (isRui) {
+      url += `?plugin_name=pathbot`;
+    }
+
+    navigate(url);
   }
 
   // 点击更多操作选项

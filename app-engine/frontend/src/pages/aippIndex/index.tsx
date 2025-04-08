@@ -20,6 +20,7 @@ import { setAppId, setAippId, setAppInfo, setChoseNodeId, setValidateInfo  } fro
 import { setIsDebug } from "@/store/common/common";
 import { getUser } from '../helper';
 import { setTestStatus } from "@/store/flowTest/flowTest";
+import usePlugin from '@/shared/hooks/usePlugin';
 
 /**
  * 应用配置页面首页
@@ -30,6 +31,7 @@ import { setTestStatus } from "@/store/flowTest/flowTest";
 const AippIndex = () => {
   const { appId, tenantId, aippId } = useParams();
   const [showElsa, setShowElsa] = useState(false);
+  const [showConfig, setShowConfig] = useState(true);
   const [spinning, setSpinning] = useState(false);
   const [saveTime, setSaveTime] = useState('');
   const [reloadInspiration, setReloadInspiration] = useState('');
@@ -41,11 +43,22 @@ const AippIndex = () => {
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const addFlowRef = useRef<any>(null);
+  const plugin = usePlugin();
 
   const elsaChange = () => {
     setShowElsa(!showElsa);
     showElsa && getAippDetails(true);
   }
+
+  const handleChangeShowConfig = () => {
+    setShowConfig(!showConfig);
+  };
+
+  useEffect(() => {
+    if (plugin) {
+      setShowConfig(false);
+    }
+  }, [plugin]);
 
   useEffect(() => {
     dispatch(setAppInfo({}));
@@ -171,6 +184,8 @@ const AippIndex = () => {
                   handleConfigDataChange={handleConfigDataChange}
                   inspirationChange={inspirationChange}
                   showElsa={showElsa}
+                  showConfig={showConfig}
+                  onChangeShowConfig={handleChangeShowConfig}
                 />
               )}
             <CommonChat

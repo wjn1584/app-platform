@@ -4,7 +4,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Divider, Spin } from 'antd';
 import { getAppInfo, getAppInfoByVersion } from '@/shared/http/aipp';
 import { Message } from '@/shared/utils/message';
@@ -72,18 +72,27 @@ const AppOverview: React.FC = () => {
         dispatch(setAppInfo({}));
         const newAppId = res.data.id;
         const aippId = res.data.aippId;
+
+        let url = `/app-develop/${tenantId}/app-detail/${newAppId}`;
+        let search = '';
         if (aippId) {
-          if (detail.appCategory === 'workflow') {
-            navigate({
-              pathname: `/app-develop/${tenantId}/app-detail/${newAppId}/${aippId}`,
-              search: '?type=chatWorkflow',
-            });
-          } else {
-            navigate(`/app-develop/${tenantId}/app-detail/${newAppId}/${aippId}`);
-          }
-        } else {
-          navigate(`/app-develop/${tenantId}/app-detail/${newAppId}`);
+          url += `/${aippId}`;
         }
+        if (detail.appCategory === 'workflow') {
+          search += 'type=chatWorkflow';
+        }
+
+        // TODO：根据后端接口判断是否进入不同应用
+        const isRui = res.data.createBy === 'admin';
+        if (isRui) {
+          search += `plugin_name=pathbot`;
+        }
+
+        if (search) {
+          url += `?${search}`;
+        }
+
+        navigate(url);
       }
     }).catch(() => {
       setBtnLoading(false);
@@ -94,6 +103,18 @@ const AppOverview: React.FC = () => {
     const opening = findConfigValue(detail, 'opening');
     setOpening(opening || '-');
   }), [detail];
+
+  const previewUrl = useMemo(() => {
+    let url = detail.chatUrl;
+
+    // TODO：根据后端接口判断是否进入不同应用
+    const isRui = detail.createBy === 'admin';
+    if (isRui) {
+      url += `?plugin_name=pathbot`;
+    }
+
+    return url;
+  }, [detail]);
 
   return (
     <Spin spinning={loading}>
@@ -156,7 +177,7 @@ const AppOverview: React.FC = () => {
           </div>
         </div>
         <div className='detail-card'>
-          <PublicCard url={detail.chatUrl} type='URL' detail={detail}  />
+          <PublicCard url={previewUrl} type='URL' detail={detail}  />
           <PublicCard url={`/${process.env.PACKAGE_MODE === 'spa' ? `agent/v1/api/${tenantId}` : 'api/jober'}`} type='API' auth={readOnly} detail={detail} />
         </div>
       </div>

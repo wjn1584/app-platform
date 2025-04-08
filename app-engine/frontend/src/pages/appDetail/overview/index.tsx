@@ -4,7 +4,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Modal, Button, Divider, Spin } from 'antd';
 import { getAppInfo, getAppInfoByVersion, exportApp } from '@/shared/http/aipp';
 import { deleteAppApi } from '@/shared/http/appDev';
@@ -12,7 +12,7 @@ import { Message } from '@/shared/utils/message';
 import { useHistory, useParams } from 'react-router';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setAppInfo } from "@/store/appInfo/appInfo";
-import { findConfigValue } from '@/shared/utils/common';
+import { findConfigValue, getAppConfig } from '@/shared/utils/common';
 import { exportJson } from '@/shared/utils/chat';
 import { convertImgPath } from '@/common/util';
 import { useTranslation } from "react-i18next";
@@ -78,18 +78,26 @@ const AppOverview: React.FC = () => {
         dispatch(setAppInfo({}));
         const newAppId = res.data.id;
         const aippId = res.data.aippId;
+
+        let url = `/app-develop/${tenantId}/app-detail/${newAppId}`;
+        let search = '';
         if (aippId) {
-          if (detail.appCategory === 'workflow') {
-            navigate({
-              pathname: `/app-develop/${tenantId}/app-detail/${newAppId}/${aippId}`,
-              search: '?type=chatWorkflow',
-            });
-          } else {
-            navigate(`/app-develop/${tenantId}/app-detail/${newAppId}/${aippId}`);
-          }
-        } else {
-          navigate(`/app-develop/${tenantId}/app-detail/${newAppId}`);
+          url += `/${aippId}`;
         }
+        if (detail.appCategory === 'workflow') {
+          search += 'type=chatWorkflow';
+        }
+
+        const appChatStyle = getAppConfig(res.data).appChatStyle;
+        if (appChatStyle) {
+          search += `plugin_name=pathobot`;
+        }
+
+        if (search) {
+          url += `?${search}`;
+        }
+
+        navigate(url);
       }
     }).catch(() => {
       setBtnLoading(false);
@@ -130,6 +138,17 @@ const AppOverview: React.FC = () => {
     const opening = findConfigValue(detail, 'opening');
     setOpening(opening || '-');
   }), [detail];
+
+  const previewUrl = useMemo(() => {
+    let url = detail.chatUrl;
+
+    const appChatStyle = getAppConfig(detail).appChatStyle;
+    if (appChatStyle) {
+      url += `?plugin_name=pathobot`;
+    }
+
+    return url;
+  }, [detail]);
 
   return (
     <Spin spinning={loading}>
@@ -196,7 +215,7 @@ const AppOverview: React.FC = () => {
           </div>
         </div>
         <div className='detail-card'>
-          <PublicCard url={detail.chatUrl} type='URL' detail={detail}  />
+          <PublicCard url={previewUrl} type='URL' detail={detail}  />
           <PublicCard url={`/${process.env.PACKAGE_MODE === 'spa' ? `agent/v1/api/${tenantId}` : 'api/jober'}`} type='API' auth={readOnly} detail={detail} />
         </div>
       </div>

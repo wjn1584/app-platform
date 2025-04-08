@@ -4,7 +4,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Spin } from 'antd';
 import { useParams } from 'react-router-dom';
 import AddFlow from '../addFlow';
@@ -29,6 +29,7 @@ import { RenderContext } from '@/pages/aippIndex/context';
 const AippIndex = () => {
   const { appId, tenantId, aippId } = useParams();
   const [showElsa, setShowElsa] = useState(false);
+  const [showConfig, setShowConfig] = useState(true);
   const [spinning, setSpinning] = useState(false);
   const [saveTime, setSaveTime] = useState('');
   const [reloadInspiration, setReloadInspiration] = useState('');
@@ -43,11 +44,22 @@ const AippIndex = () => {
   const addFlowRef = useRef<any>(null);
   const renderRef = useRef(false);
   const elsaReadOnlyRef = useRef(false);
+  const plugin = usePlugin();
 
   const elsaChange = () => {
     setShowElsa(!showElsa);
     showElsa && getAippDetails(true);
   }
+
+  const handleChangeShowConfig = () => {
+    setShowConfig(!showConfig);
+  };
+
+  useEffect(() => {
+    if (plugin) {
+      setShowConfig(false);
+    }
+  }, [plugin]);
 
   useEffect(() => {
     dispatch(setAppInfo({}));
@@ -181,9 +193,15 @@ const AippIndex = () => {
                   handleConfigDataChange={handleConfigDataChange}
                   inspirationChange={inspirationChange}
                   showElsa={showElsa}
+                  showConfig={showConfig}
+                  onChangeShowConfig={handleChangeShowConfig}
                 />
               )}
-              <CommonChat contextProvider={contextProvider} previewBack={changeChat} />
+              <CommonChat
+                showElsa={showElsa}
+                contextProvider={contextProvider}
+                previewBack={changeChat}
+              />
             </div>
           </RenderContext.Provider>
         </div>

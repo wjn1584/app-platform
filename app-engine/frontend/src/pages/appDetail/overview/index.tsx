@@ -88,7 +88,7 @@ const AppOverview: React.FC = () => {
           search += 'type=chatWorkflow';
         }
 
-        const appChatStyle = getAppConfig(res.data).appChatStyle;
+        const appChatStyle = getAppConfig(res.data) ? getAppConfig(res.data).appChatStyle : null;
         if (appChatStyle) {
           search += `plugin_name=pathobot`;
         }
@@ -142,7 +142,7 @@ const AppOverview: React.FC = () => {
   const previewUrl = useMemo(() => {
     let url = detail.chatUrl;
 
-    const appChatStyle = getAppConfig(detail).appChatStyle;
+    const appChatStyle = getAppConfig(detail) ? getAppConfig(detail).appChatStyle : null;
     if (appChatStyle) {
       url += `?plugin_name=pathobot`;
     }

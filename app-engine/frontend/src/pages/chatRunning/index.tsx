@@ -100,7 +100,7 @@ const ChatRunning = () => {
         setNotice('');
         announcements(res.data);
         dispatch(setInspirationOpen(true));
-        const appChatStyle = getAppConfig(res.data).appChatStyle;
+        const appChatStyle = getAppConfig(res.data) ? getAppConfig(res.data).appChatStyle : null;
         if (appChatStyle === 'heatMap') {
           history.push(`${history.location.pathname}?plugin_name=pathobot`);
         }

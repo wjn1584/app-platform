@@ -11,7 +11,7 @@ import { Message } from '@/shared/utils/message';
 import { useHistory, useParams } from 'react-router';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setAppInfo } from "@/store/appInfo/appInfo";
-import { findConfigValue } from '@/shared/utils/common';
+import { findConfigValue, getAppConfig } from '@/shared/utils/common';
 import { convertImgPath } from '@/common/util';
 import { useTranslation } from "react-i18next";
 import knowledgeImg from '@/assets/images/knowledge/knowledge-base.png';
@@ -82,10 +82,9 @@ const AppOverview: React.FC = () => {
           search += 'type=chatWorkflow';
         }
 
-        // TODO：根据后端接口判断是否进入不同应用
-        const isRui = res.data.createBy === 'admin';
-        if (isRui) {
-          search += `plugin_name=pathbot`;
+        const appChatStyle = getAppConfig(res.data).appChatStyle;
+        if (appChatStyle) {
+          search += `plugin_name=pathobot`;
         }
 
         if (search) {
@@ -107,10 +106,9 @@ const AppOverview: React.FC = () => {
   const previewUrl = useMemo(() => {
     let url = detail.chatUrl;
 
-    // TODO：根据后端接口判断是否进入不同应用
-    const isRui = detail.createBy === 'admin';
-    if (isRui) {
-      url += `?plugin_name=pathbot`;
+    const appChatStyle = getAppConfig(detail).appChatStyle;
+    if (appChatStyle) {
+      url += `?plugin_name=pathobot`;
     }
 
     return url;

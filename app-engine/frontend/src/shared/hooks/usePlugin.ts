@@ -2,7 +2,7 @@ import useSearchParams from "./useSearchParams";
 
 const PLUGINS = [
   {
-    "name": "pathbot",
+    "name": "pathobot",
     // "url": "/plugins/pathbot/index.html#/chat?sidebar=0"  // prod
     "url": "http://localhost:3099/#/chat?sidebar=0"       // dev
   }

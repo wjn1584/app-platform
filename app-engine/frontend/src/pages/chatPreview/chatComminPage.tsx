@@ -15,7 +15,7 @@ import ChatPreview from './index';
 
 // 公共参数，公共聊天界面
 const CommonChat = (props: any) => {
-  const { contextProvider, previewBack } = props;
+  const { contextProvider, previewBack, showElsa } = props;
 
   const history = useHistory();
 
@@ -69,7 +69,7 @@ const CommonChat = (props: any) => {
     });
 
   return (
-    plugin
+    (plugin && !showElsa)
     ? <iframe
         src={iframeUrl}
         style={ {border: 'none', height: '100%'} }

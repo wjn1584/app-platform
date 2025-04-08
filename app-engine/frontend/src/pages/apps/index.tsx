@@ -77,12 +77,6 @@ const Apps: React.FC = () => {
       url += `/${aippId}`;
     }
 
-    // TODO：根据后端接口判断是否进入不同应用
-    const isRui = item.modifier === 'admin';
-    if (isRui) {
-      url += `?plugin_name=pathbot`;
-    }
-
     navigate(url);
   }
 

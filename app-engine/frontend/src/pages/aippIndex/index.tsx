@@ -189,6 +189,7 @@ const AippIndex = () => {
                 />
               )}
             <CommonChat
+              showElsa={showElsa}
               contextProvider={contextProvider}
               previewBack={changeChat}
             />

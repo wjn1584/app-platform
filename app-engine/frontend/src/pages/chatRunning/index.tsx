@@ -15,7 +15,7 @@ import { setIsDebug } from "@/store/common/common";
 import { setInspirationOpen } from '@/store/chatStore/chatStore';
 import { storage } from '@/shared/storage';
 import { useTranslation } from 'react-i18next';
-import { findConfigValue } from '@/shared/utils/common';
+import { findConfigValue, getAppConfig } from '@/shared/utils/common';
 import usePlugin from '@/shared/hooks/usePlugin';
 import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
 import CommonChat from '../chatPreview/chatComminPage';
@@ -100,6 +100,10 @@ const ChatRunning = () => {
         setNotice('');
         announcements(res.data);
         dispatch(setInspirationOpen(true));
+        const appChatStyle = getAppConfig(res.data).appChatStyle;
+        if (appChatStyle === 'heatMap') {
+          history.push(`${history.location.pathname}?plugin_name=pathobot`);
+        }
       }
     } finally {
       setLoading(false);

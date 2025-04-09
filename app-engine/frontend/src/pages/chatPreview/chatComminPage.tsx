@@ -12,9 +12,10 @@ import useSearchParams from "@/shared/hooks/useSearchParams";
 import usePlugin from "@/shared/hooks/usePlugin";
 import { AippContext } from '../aippIndex/context';
 import ChatPreview from './index';
-import { useAppSelector } from "@/store/hook";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { TENANT_ID } from "@/pages/chatPreview/components/send-editor/common/config";
 import { findConfigValue } from "@/shared/utils/common";
+import { setAppInfo } from "@/store/appInfo/appInfo";
 
 // 公共参数，公共聊天界面
 const CommonChat = (props: any) => {
@@ -22,9 +23,9 @@ const CommonChat = (props: any) => {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const isDebug = useAppSelector((state) => state.commonStore.isDebug);
-  const appRef = useRef<any>({});
 
   const history = useHistory();
+  const dispatch = useAppDispatch();
 
     const { uid } = useParams();
     const isPreview = useMemo(() => !!uid, [uid]);
@@ -77,7 +78,6 @@ const CommonChat = (props: any) => {
 
     // 给iframe的对话界面传递参数
     const sendMessageToIframe = () => {
-      const appInfo = appRef.current;
       let params = {
         tenantId: TENANT_ID,
         appId: appInfo.id,
@@ -88,11 +88,10 @@ const CommonChat = (props: any) => {
     }
 
   useEffect(() => {
-    if (Object.keys(appInfo).length === 0) {
-      return;
-    }
-    appRef.current = appInfo;
-  }, [appInfo]);
+    return () => {
+      dispatch(setAppInfo({}));
+    };
+  }, []);
 
   return (
     (plugin && !showElsa)

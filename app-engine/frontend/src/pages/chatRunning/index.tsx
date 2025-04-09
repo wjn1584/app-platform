@@ -16,7 +16,7 @@ import { setInspirationOpen } from '@/store/chatStore/chatStore';
 import { storage } from '@/shared/storage';
 import { useTranslation } from 'react-i18next';
 import { findConfigValue, getAppConfig } from '@/shared/utils/common';
-import usePlugin from '@/shared/hooks/usePlugin';
+import useSearchParams from '@/shared/hooks/useSearchParams';
 import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
 import CommonChat from '../chatPreview/chatComminPage';
 import Login from './login';
@@ -42,9 +42,11 @@ const ChatRunning = () => {
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const loginStatus = useAppSelector((state) => state.chatCommonStore.loginStatus);
   const noAuth = useAppSelector((state) => state.chatCommonStore.noAuth);
+  const pluginList = useAppSelector((state) => state.chatCommonStore.pluginList);
 
   // 插件不显示app name，可能遮挡插件内容，仅留返回按钮
-  const plugin = usePlugin();
+  const { plugin_name } = useSearchParams();
+  const [plugin, setPlugin] = useState();
 
   // 获取publishId
   const getPublishId = async () => {
@@ -149,6 +151,12 @@ const ChatRunning = () => {
       storage.set('chatVersionMap', arr);
     }
   }
+
+  useEffect(() => {
+    const found = pluginList.find((item: any) => item.name === plugin_name);
+    setPlugin(found);
+  }, [pluginList, plugin_name]);
+
   // 点击显示弹层
   useEffect(() => {
     if (uid) {

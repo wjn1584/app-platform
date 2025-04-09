@@ -19,6 +19,7 @@ import { setAippId, setAppId, setAppInfo, setChoseNodeId, setValidateInfo } from
 import { setIsDebug } from '@/store/common/common';
 import { setTestStatus } from '@/store/flowTest/flowTest';
 import { RenderContext } from '@/pages/aippIndex/context';
+import useSearchParams from '@/shared/hooks/useSearchParams';
 
 /**
  * 应用配置页面首页
@@ -41,10 +42,13 @@ const AippIndex = () => {
   const inspirationRefresh = useRef<any>(false);
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
+  const pluginList = useAppSelector((state) => state.chatCommonStore.pluginList);
   const addFlowRef = useRef<any>(null);
   const renderRef = useRef(false);
   const elsaReadOnlyRef = useRef(false);
-  const plugin = usePlugin();
+
+  const { plugin_name } = useSearchParams();
+  const [plugin, setPlugin] = useState();
 
   const elsaChange = () => {
     setShowElsa(!showElsa);
@@ -54,6 +58,11 @@ const AippIndex = () => {
   const handleChangeShowConfig = () => {
     setShowConfig(!showConfig);
   };
+
+  useEffect(() => {
+    const found = pluginList.find((item: any) => item.name === plugin_name);
+    setPlugin(found);
+  }, [pluginList, plugin_name]);
 
   useEffect(() => {
     if (plugin) {

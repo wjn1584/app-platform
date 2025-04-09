@@ -47,7 +47,6 @@ export const getRole = async () => {
 
 export const getChatPluginList = async () => {
   const pluginList = await queryPluginList();
-  debugger
   store.dispatch(setPluginList(pluginList));
 }
 

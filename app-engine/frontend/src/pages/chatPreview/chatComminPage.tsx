@@ -11,9 +11,10 @@ import { useParams, useHistory } from 'react-router-dom';
 import useSearchParams from "@/shared/hooks/useSearchParams";
 import { AippContext } from '../aippIndex/context';
 import ChatPreview from './index';
-import { useAppSelector } from "@/store/hook";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { TENANT_ID } from "@/pages/chatPreview/components/send-editor/common/config";
 import { findConfigValue } from "@/shared/utils/common";
+import { setAppInfo } from "@/store/appInfo/appInfo";
 
 // 公共参数，公共聊天界面
 const CommonChat = (props: any) => {
@@ -25,6 +26,7 @@ const CommonChat = (props: any) => {
   const appRef = useRef<any>({});
 
   const history = useHistory();
+  const dispatch = useAppDispatch();
 
   const { uid } = useParams();
   const isPreview = useMemo(() => !!uid, [uid]);
@@ -32,15 +34,56 @@ const CommonChat = (props: any) => {
   const { plugin_name, ...params } = useSearchParams();
   const [plugin, setPlugin] = useState();
 
-  const iframeUrl = useMemo(() => {
-      let url = plugin?.url;
-      const hasSearch = url?.includes('?');
-      const search = qs.stringify({
-          ...params,
-          back: isPreview ? undefined : '1'
-      });
-      if (search) {
-          url += hasSearch ? `&${search}` : `?${search}`
+    const iframeUrl = useMemo(() => {
+        let url = plugin?.url;
+        const hasSearch = url?.includes('?');
+        const search = qs.stringify({
+            ...params,
+            back: isPreview ? undefined : '1'
+        });
+        if (search) {
+            url += hasSearch ? `&${search}` : `?${search}`
+        }
+        return url;
+    }, [plugin, isPreview, params])
+
+    useEffect(() => {
+        const handler = (e: { data: string }) => {
+            const data = JSON.parse(e.data);
+            if (data.type === 'back') {
+                if (isPreview) {
+                    history.goBack();
+                } else {
+                    history.push({
+                        pathname: '/app'
+                    })
+                }
+            } else if (data.type === 'navigate') {
+                const search = new URLSearchParams(history.location.search);
+                Object.entries(data.params).forEach(([key, value]) => {
+                    if (value === null) {
+                        search.delete(key);
+                    } else {
+                        search.set(key, String(value));
+                    }
+                });
+
+                history.push({
+                    search: search.toString()
+                });
+            }
+        };
+        window.addEventListener('message', handler);
+        return () => window.removeEventListener('message', handler);
+    });
+
+    // 给iframe的对话界面传递参数
+    const sendMessageToIframe = () => {
+      let params = {
+        tenantId: TENANT_ID,
+        appId: appInfo.id,
+        useMemory: findConfigValue(appInfo, 'memory').memorySwitch,
+        isDebug
       }
       return url;
   }, [plugin, isPreview, params]);
@@ -93,11 +136,10 @@ const CommonChat = (props: any) => {
   }
 
   useEffect(() => {
-    if (Object.keys(appInfo).length === 0) {
-      return;
-    }
-    appRef.current = appInfo;
-  }, [appInfo]);
+    return () => {
+      dispatch(setAppInfo({}));
+    };
+  }, []);
 
   return (
     (plugin && !showElsa)

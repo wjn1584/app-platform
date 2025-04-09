@@ -6,14 +6,20 @@
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Spin } from 'antd';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory, useLocation } from 'react-router-dom';
 import AddFlow from '../addFlow';
 import ConfigForm from '../configForm';
 import CommonChat from '../chatPreview/chatComminPage';
 import ChoreographyHead from '../components/header';
 import { getAppInfo } from '@/shared/http/aipp';
 import { updateFormInfo } from '@/shared/http/aipp';
-import { debounce, getUiD, getCurrentTime, setSpaClassName } from '@/shared/utils/common';
+import {
+  debounce,
+  getUiD,
+  getCurrentTime,
+  setSpaClassName,
+  getAppConfig
+} from '@/shared/utils/common';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setInspirationOpen } from '@/store/chatStore/chatStore';
 import { setAppId, setAippId, setAppInfo, setChoseNodeId, setValidateInfo  } from '@/store/appInfo/appInfo';
@@ -47,6 +53,9 @@ const AippIndex = () => {
   
   const { plugin_name } = useSearchParams();
   const [plugin, setPlugin] = useState();
+
+  const history = useHistory();
+  const location = useLocation();
 
   const elsaChange = () => {
     setShowElsa(!showElsa);
@@ -100,11 +109,23 @@ const AippIndex = () => {
         res.data.hideHistory = true;
         aippRef.current = res.data;
         dispatch(setAppInfo(res.data));
+        RefreshChatStyle(res.data);
       }
     } finally {
       setSpinning(false);
     }
   }
+
+  // 基于appInfo更新对话界面
+  const RefreshChatStyle = (appInfo) => {
+    const appChatStyle = getAppConfig(appInfo) ? getAppConfig(appInfo).appChatStyle : null;
+    if (appChatStyle === 'heatMap') {
+      history.replace(`${location.pathname}?plugin_name=pathobot`);
+    } else {
+      history.replace(location.pathname);
+    }
+  };
+
   // 修改aipp更新回调
   const updateAippCallBack = (data) => {
     if (data) {

@@ -83,7 +83,7 @@ const AppOverview: React.FC = () => {
         }
 
         const appChatStyle = getAppConfig(res.data) ? getAppConfig(res.data).appChatStyle : null;
-        if (appChatStyle) {
+        if (appChatStyle === 'heatMap') {
           search += `plugin_name=pathobot`;
         }
 
@@ -107,7 +107,7 @@ const AppOverview: React.FC = () => {
     let url = detail.chatUrl;
 
     const appChatStyle = getAppConfig(detail) ? getAppConfig(detail).appChatStyle : null;
-    if (appChatStyle) {
+    if (appChatStyle === 'heatMap') {
       url += `?plugin_name=pathobot`;
     }
 

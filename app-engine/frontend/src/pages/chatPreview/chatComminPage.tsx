@@ -23,16 +23,20 @@ const CommonChat = (props: any) => {
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const isDebug = useAppSelector((state) => state.commonStore.isDebug);
   const pluginList = useAppSelector((state) => state.chatCommonStore.pluginList);
-  const appRef = useRef<any>({});
 
   const history = useHistory();
   const dispatch = useAppDispatch();
 
-  const { uid } = useParams();
-  const isPreview = useMemo(() => !!uid, [uid]);
+    const { uid } = useParams();
+    const isPreview = useMemo(() => !!uid, [uid]);
 
-  const { plugin_name, ...params } = useSearchParams();
-  const [plugin, setPlugin] = useState();
+    const { plugin_name, ...params } = useSearchParams();
+    const [plugin, setPlugin] = useState();
+
+    useEffect(() => {
+      const found = pluginList.find((item: any) => item.name === plugin_name);
+      setPlugin(found);
+    }, [pluginList, plugin_name]);
 
     const iframeUrl = useMemo(() => {
         let url = plugin?.url;
@@ -45,7 +49,7 @@ const CommonChat = (props: any) => {
             url += hasSearch ? `&${search}` : `?${search}`
         }
         return url;
-    }, [plugin, isPreview, params])
+    }, [plugin, isPreview, params]);
 
     useEffect(() => {
         const handler = (e: { data: string }) => {
@@ -85,55 +89,8 @@ const CommonChat = (props: any) => {
         useMemory: findConfigValue(appInfo, 'memory').memorySwitch,
         isDebug
       }
-      return url;
-  }, [plugin, isPreview, params]);
-
-  useEffect(() => {
-    const found = pluginList.find((item: any) => item.name === plugin_name);
-    setPlugin(found);
-  }, [pluginList, plugin_name]);
-
-  useEffect(() => {
-    const handler = (e: { data: string }) => {
-      const data = JSON.parse(e.data);
-      if (data.type === 'back') {
-        if (isPreview) {
-          history.goBack();
-        } else {
-          history.push({
-            pathname: '/app'
-          })
-        }
-      } else if (data.type === 'navigate') {
-        const search = new URLSearchParams(history.location.search);
-        Object.entries(data.params).forEach(([key, value]) => {
-          if (value === null) {
-            search.delete(key);
-          } else {
-            search.set(key, String(value));
-          }
-        });
-
-        history.push({
-          search: search.toString()
-        });
-      }
-    };
-    window.addEventListener('message', handler);
-    return () => window.removeEventListener('message', handler);
-  });
-
-  // 给iframe的对话界面传递参数
-  const sendMessageToIframe = () => {
-    const appInfo = appRef.current;
-    let params = {
-      tenantId: TENANT_ID,
-      appId: appInfo.id,
-      useMemory: findConfigValue(appInfo, 'memory').memorySwitch,
-      isDebug
+      iframeRef.current?.contentWindow.postMessage({...params}, '*');
     }
-    iframeRef.current?.contentWindow.postMessage({...params}, '*');
-  }
 
   useEffect(() => {
     return () => {

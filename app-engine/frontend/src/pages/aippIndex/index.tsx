@@ -44,7 +44,7 @@ const AippIndex = () => {
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const pluginList = useAppSelector((state) => state.chatCommonStore.pluginList);
   const addFlowRef = useRef<any>(null);
-  
+
   const { plugin_name } = useSearchParams();
   const [plugin, setPlugin] = useState();
 

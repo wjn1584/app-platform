@@ -54,3 +54,9 @@ export function deleteFeedback(id) {
   const url = `${PLUGIN_URL}/aipp/usr/feedback/${id}`;
   return del(url);
 }
+
+export function queryPluginList() {
+  return fetch('/plugins/manifest.json')
+    .then(resp => resp.json())
+    .catch(() => []);
+}

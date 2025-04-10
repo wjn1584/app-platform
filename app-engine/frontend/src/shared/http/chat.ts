@@ -56,7 +56,10 @@ export function deleteFeedback(id) {
 }
 
 export function queryPluginList() {
-  return fetch('/plugins/manifest.json')
+  const isProd = process.env.NODE_ENV === 'prod';
+  const isSpa = process.env.PACKAGE_MODE === 'spa';
+  const prefix = isProd && isSpa ? '/apps/appengine' : '';
+  return fetch(`${prefix}/plugins/manifest.json`)
     .then(resp => resp.json())
     .catch(() => []);
 }

@@ -61,7 +61,7 @@ run_build() {
     npm run build
   fi
 
-  PLUGIN_ICON=`ls ruijin.*.jpg`
+  PLUGIN_ICON="/apps/appengine/plugins/$PLUGIN_NAME/icon.jpg"
 }
 
 # 安装插件

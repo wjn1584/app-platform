@@ -119,7 +119,7 @@ const AippIndex = () => {
   // 基于appInfo更新对话界面
   const RefreshChatStyle = (appInfo) => {
     const appChatStyle = getAppConfig(appInfo) ? getAppConfig(appInfo).appChatStyle : null;
-    if (appChatStyle === 'heatMap') {
+    if (appChatStyle === 'pathobot') {
       history.replace(`${location.pathname}?plugin_name=pathobot`);
     } else {
       history.replace(location.pathname);

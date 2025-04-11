@@ -45,7 +45,7 @@ const ChatRunning = () => {
   const pluginList = useAppSelector((state) => state.chatCommonStore.pluginList);
 
   // 插件不显示app name，可能遮挡插件内容，仅留返回按钮
-  const { plugin_name } = useSearchParams();
+  const { plugin_name, ...searchParams } = useSearchParams();
   const [plugin, setPlugin] = useState();
 
   // 获取publishId
@@ -104,7 +104,13 @@ const ChatRunning = () => {
         dispatch(setInspirationOpen(true));
         const appChatStyle = getAppConfig(res.data) ? getAppConfig(res.data).appChatStyle : null;
         if (appChatStyle === 'pathobot') {
-          history.push(`${history.location.pathname}?plugin_name=pathobot`);
+          history.push({
+            pathname: history.location.pathname,
+            search: {
+              ...searchParams,
+              plugin_name: 'pathobot',
+            }
+          });
         }
       }
     } finally {

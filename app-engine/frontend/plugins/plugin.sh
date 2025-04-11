@@ -66,6 +66,7 @@ run_build() {
 
 # 安装插件
 install_plugin() {
+  rm -rf ../../plugins/$PLUGIN_NAME
   cp -r ./dist ../../plugins/$PLUGIN_NAME
 }
 

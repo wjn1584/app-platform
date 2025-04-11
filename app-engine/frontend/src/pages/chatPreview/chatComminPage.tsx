@@ -30,7 +30,7 @@ const CommonChat = (props: any) => {
     const { uid } = useParams();
     const isPreview = useMemo(() => !!uid, [uid]);
 
-    const { plugin_name, ...params } = useSearchParams();
+    const { plugin_name, ...searchParams } = useSearchParams();
     const [plugin, setPlugin] = useState();
 
     useEffect(() => {
@@ -42,14 +42,14 @@ const CommonChat = (props: any) => {
         let url = plugin?.url;
         const hasSearch = url?.includes('?');
         const search = qs.stringify({
-            ...params,
+            ...searchParams,
             back: isPreview ? undefined : '1'
         });
         if (search) {
             url += hasSearch ? `&${search}` : `?${search}`
         }
         return url;
-    }, [plugin, isPreview, params]);
+    }, [plugin, isPreview, searchParams]);
 
     useEffect(() => {
         const handler = (e: { data: string }) => {

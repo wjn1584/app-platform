@@ -27,6 +27,7 @@ import { setIsDebug } from "@/store/common/common";
 import { getUser } from '../helper';
 import { setTestStatus } from "@/store/flowTest/flowTest";
 import useSearchParams from '@/shared/hooks/useSearchParams';
+import qs from 'qs';
 
 /**
  * 应用配置页面首页
@@ -51,7 +52,7 @@ const AippIndex = () => {
   const pluginList = useAppSelector((state) => state.chatCommonStore.pluginList);
   const addFlowRef = useRef<any>(null);
   
-  const { plugin_name } = useSearchParams();
+  const { plugin_name, ...searchParams } = useSearchParams();
   const [plugin, setPlugin] = useState();
 
   const history = useHistory();
@@ -120,7 +121,11 @@ const AippIndex = () => {
   const RefreshChatStyle = (appInfo) => {
     const appChatStyle = getAppConfig(appInfo) ? getAppConfig(appInfo).appChatStyle : null;
     if (appChatStyle === 'pathobot') {
-      history.replace(`${location.pathname}?plugin_name=pathobot`);
+      const search = qs.stringify({
+        ...searchParams,
+        plugin_name: 'pathobot',
+      });
+      history.replace(`${location.pathname}?${search}`);
     } else {
       history.replace(location.pathname);
     }

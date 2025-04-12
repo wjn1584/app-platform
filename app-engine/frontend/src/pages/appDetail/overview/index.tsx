@@ -58,11 +58,13 @@ const AppOverview: React.FC = () => {
       setLoading(false);
     });
   }, []);
+
   // 获取图片
   const getImgPath = async (icon) => {
     const res: any = await convertImgPath(icon);
     setAppIcon(res);
   };
+
   // 去编排点击回调
   const gotoArrange = () => {
     setBtnLoading(true);
@@ -74,21 +76,11 @@ const AppOverview: React.FC = () => {
         const aippId = res.data.aippId;
 
         let url = `/app-develop/${tenantId}/app-detail/${newAppId}`;
-        let search = '';
         if (aippId) {
           url += `/${aippId}`;
         }
         if (detail.appCategory === 'workflow') {
-          search += 'type=chatWorkflow';
-        }
-
-        const appChatStyle = getAppConfig(res.data) ? getAppConfig(res.data).appChatStyle : null;
-        if (appChatStyle === 'pathobot') {
-          search += `plugin_name=pathobot`;
-        }
-
-        if (search) {
-          url += `?${search}`;
+          url += '?type=chatWorkflow';
         }
 
         navigate(url);
@@ -103,16 +95,6 @@ const AppOverview: React.FC = () => {
     setOpening(opening || '-');
   }), [detail];
 
-  const previewUrl = useMemo(() => {
-    let url = detail.chatUrl;
-
-    const appChatStyle = getAppConfig(detail) ? getAppConfig(detail).appChatStyle : null;
-    if (appChatStyle === 'pathobot') {
-      url += `?plugin_name=pathobot`;
-    }
-
-    return url;
-  }, [detail]);
 
   return (
     <Spin spinning={loading}>
@@ -175,7 +157,7 @@ const AppOverview: React.FC = () => {
           </div>
         </div>
         <div className='detail-card'>
-          <PublicCard url={previewUrl} type='URL' detail={detail}  />
+          <PublicCard url={detail.chatUrl} type='URL' detail={detail}  />
           <PublicCard url={`/${process.env.PACKAGE_MODE === 'spa' ? `agent/v1/api/${tenantId}` : 'api/jober'}`} type='API' auth={readOnly} detail={detail} />
         </div>
       </div>

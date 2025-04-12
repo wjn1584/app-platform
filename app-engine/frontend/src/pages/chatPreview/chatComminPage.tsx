@@ -48,30 +48,44 @@ const CommonChat = (props: any) => {
         return url;
     }, [plugin, isPreview, searchParams]);
 
+    const handleReady = () => {
+      sendMessageToIframe();
+    };
+
+    const handleBack = () => {
+      if (isPreview) {
+        history.goBack();
+      } else {
+        history.push({
+          pathname: '/app'
+        });
+      }
+    };
+
+    const handleNavigate = (data: any) => {
+      const search = new URLSearchParams(history.location.search);
+      Object.entries(data.params).forEach(([key, value]) => {
+        if (value === null) {
+          search.delete(key);
+        } else {
+          search.set(key, String(value));
+        }
+      });
+
+      history.push({
+        search: search.toString()
+      });
+    };
+
     useEffect(() => {
         const handler = (e: { data: string }) => {
             const data = JSON.parse(e.data);
-            if (data.type === 'back') {
-                if (isPreview) {
-                    history.goBack();
-                } else {
-                    history.push({
-                        pathname: '/app'
-                    })
-                }
+            if (data.type === 'ready') {
+              handleReady();
+            } else if (data.type === 'back') {
+              handleBack();
             } else if (data.type === 'navigate') {
-                const search = new URLSearchParams(history.location.search);
-                Object.entries(data.params).forEach(([key, value]) => {
-                    if (value === null) {
-                        search.delete(key);
-                    } else {
-                        search.set(key, String(value));
-                    }
-                });
-
-                history.push({
-                    search: search.toString()
-                });
+              handleNavigate(data);
             }
         };
         window.addEventListener('message', handler);

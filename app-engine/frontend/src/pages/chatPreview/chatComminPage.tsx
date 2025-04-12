@@ -104,6 +104,8 @@ const CommonChat = (props: any) => {
     ? <iframe
         ref={iframeRef}
         src={iframeUrl}
+        allowFullScreen
+        allow="clipboard-read; clipboard-write"
         style={ {border: 'none', height: '100%'} }
         width="100%"
         onLoad={sendMessageToIframe}

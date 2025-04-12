@@ -41,10 +41,7 @@ const CommonChat = (props: any) => {
     const iframeUrl = useMemo(() => {
         let url = plugin?.url;
         const hasSearch = url?.includes('?');
-        const search = qs.stringify({
-            ...searchParams,
-            back: isPreview ? undefined : '1'
-        });
+        const search = qs.stringify(searchParams);
         if (search) {
             url += hasSearch ? `&${search}` : `?${search}`
         }

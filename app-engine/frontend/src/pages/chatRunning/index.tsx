@@ -45,7 +45,7 @@ const ChatRunning = () => {
   const pluginList = useAppSelector((state) => state.chatCommonStore.pluginList);
 
   // 插件不显示app name，可能遮挡插件内容，仅留返回按钮
-  const { plugin_name, ...searchParams } = useSearchParams();
+  const [pluginName, setPluginName] = useState('default');
   const [plugin, setPlugin] = useState();
 
   // 获取publishId
@@ -82,6 +82,7 @@ const ChatRunning = () => {
     try {
       const res:any = await getPublishAppId(TENANT_ID, id);
       if (res && res.code === 0) {
+        getAippDetails(res.data.app_id);
         dispatch(setAippId(res.data.aipp_id));
         dispatch(setAppVersion(res.data.version));
       }
@@ -92,7 +93,7 @@ const ChatRunning = () => {
   // 获取aipp详情
   const getAippDetails = async (appId: string) => {
     try {
-      const res:any = await getAppInfo(tenantId, appId);
+      const res:any = await getAppInfo(tenantId || TENANT_ID, appId);
       setLoading(false);
       if (res.code === 0) {
         res.data.notShowHistory = false;
@@ -103,15 +104,7 @@ const ChatRunning = () => {
         announcements(res.data);
         dispatch(setInspirationOpen(true));
         const appChatStyle = getAppConfig(res.data) ? getAppConfig(res.data).appChatStyle : null;
-        if (appChatStyle === 'pathobot') {
-          history.push({
-            pathname: history.location.pathname,
-            search: {
-              ...searchParams,
-              plugin_name: 'pathobot',
-            }
-          });
-        }
+        setPluginName(appChatStyle || 'default');
       }
     } finally {
       setLoading(false);
@@ -159,9 +152,9 @@ const ChatRunning = () => {
   }
 
   useEffect(() => {
-    const found = pluginList.find((item: any) => item.name === plugin_name);
+    const found = pluginList.find((item: any) => item.name === pluginName);
     setPlugin(found);
-  }, [pluginList, plugin_name]);
+  }, [pluginList, pluginName]);
 
   // 点击显示弹层
   useEffect(() => {
@@ -204,7 +197,7 @@ const ChatRunning = () => {
             <Button type='text' onClick={handleBack}>{t('return')}</Button>
             {plugin ? null : <span className='running-app-name'>{appInfo.name}</span>}
           </div>}
-          <CommonChat  />
+          <CommonChat pluginName={pluginName} />
           <Modal
             title={t('updateLog')}
             width={800}

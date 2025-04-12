@@ -18,7 +18,7 @@ import { setAppInfo } from "@/store/appInfo/appInfo";
 
 // 公共参数，公共聊天界面
 const CommonChat = (props: any) => {
-  const { contextProvider, previewBack, showElsa } = props;
+  const { contextProvider, previewBack, showElsa, pluginName = 'default' } = props;
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const isDebug = useAppSelector((state) => state.commonStore.isDebug);
@@ -30,13 +30,13 @@ const CommonChat = (props: any) => {
     const { uid } = useParams();
     const isPreview = useMemo(() => !!uid, [uid]);
 
-    const { plugin_name, ...searchParams } = useSearchParams();
+    const searchParams = useSearchParams();
     const [plugin, setPlugin] = useState();
 
     useEffect(() => {
-      const found = pluginList.find((item: any) => item.name === plugin_name);
+      const found = pluginList.find((item: any) => item.name === pluginName);
       setPlugin(found);
-    }, [pluginList, plugin_name]);
+    }, [pluginList, pluginName]);
 
     const iframeUrl = useMemo(() => {
         let url = plugin?.url;

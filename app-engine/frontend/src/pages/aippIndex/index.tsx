@@ -6,7 +6,7 @@
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Spin } from 'antd';
-import { useParams, useHistory, useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import AddFlow from '../addFlow';
 import ConfigForm from '../configForm';
 import CommonChat from '../chatPreview/chatComminPage';
@@ -26,8 +26,6 @@ import { setAppId, setAippId, setAppInfo, setChoseNodeId, setValidateInfo  } fro
 import { setIsDebug } from "@/store/common/common";
 import { getUser } from '../helper';
 import { setTestStatus } from "@/store/flowTest/flowTest";
-import useSearchParams from '@/shared/hooks/useSearchParams';
-import qs from 'qs';
 
 /**
  * 应用配置页面首页
@@ -52,11 +50,9 @@ const AippIndex = () => {
   const pluginList = useAppSelector((state) => state.chatCommonStore.pluginList);
   const addFlowRef = useRef<any>(null);
   
-  const { plugin_name, ...searchParams } = useSearchParams();
+  const [pluginName, setPluginName] = useState('default');
   const [plugin, setPlugin] = useState();
 
-  const history = useHistory();
-  const location = useLocation();
 
   const elsaChange = () => {
     setShowElsa(!showElsa);
@@ -68,9 +64,9 @@ const AippIndex = () => {
   };
 
   useEffect(() => {
-    const found = pluginList.find((item: any) => item.name === plugin_name);
+    const found = pluginList.find((item: any) => item.name === pluginName);
     setPlugin(found);
-  }, [pluginList, plugin_name]);
+  }, [pluginList, pluginName]);
 
   useEffect(() => {
     if (plugin) {
@@ -120,15 +116,7 @@ const AippIndex = () => {
   // 基于appInfo更新对话界面
   const RefreshChatStyle = (appInfo) => {
     const appChatStyle = getAppConfig(appInfo) ? getAppConfig(appInfo).appChatStyle : null;
-    if (appChatStyle === 'pathobot') {
-      const search = qs.stringify({
-        ...searchParams,
-        plugin_name: 'pathobot',
-      });
-      history.replace(`${location.pathname}?${search}`);
-    } else {
-      history.replace(location.pathname);
-    }
+    setPluginName(appChatStyle || 'default');
   };
 
   // 修改aipp更新回调
@@ -226,6 +214,7 @@ const AippIndex = () => {
               showElsa={showElsa}
               contextProvider={contextProvider}
               previewBack={changeChat}
+              pluginName={pluginName}
             />
           </div>
         </div>

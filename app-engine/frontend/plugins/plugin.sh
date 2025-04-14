@@ -3,12 +3,18 @@
 
 ENV=$1
 MODE=$2
+PLUGIN_NAME=$3
+CODE_URL=$4
+CODE_BRANCH=$5
 
 PLUGIN_URL=""
 PLUGIN_ICON=""
-PLUGIN_NAME="pathobot"
 PLUGIN_DEV_URL="http://localhost:3099/#/chat?sidebar=0"
-PLUGIN_PROD_URL="/apps/appengine/plugins/$PLUGIN_NAME/index.html#/chat?sidebar=0"
+if [ "$MODE" = "spa" ]; then
+  PLUGIN_PROD_URL="/apps/appengine/plugins/$PLUGIN_NAME/index.html#/chat?sidebar=0"
+else
+  PLUGIN_PROD_URL="/plugins/$PLUGIN_NAME/index.html#/chat?sidebar=0"
+fi
 WORKSPACE=packages
 
 cd_workspace() {
@@ -21,14 +27,14 @@ cd_workspace() {
 
 # 下载插件代码，或者更新代码
 clone_repo() {
-  # if [ -d $PLUGIN_NAME ]; then
-  #   cd $PLUGIN_NAME
-  #   git pull
-  #   cd ..
-  # else
-  #   git clone https://github.com/AI-Application-Innovation/PathbotFrontend.git $PLUGIN_NAME
-  #   cd $PLUGIN_NAME
-  # fi
+#   if [ -d $PLUGIN_NAME ]; then
+#     cd $PLUGIN_NAME
+#     git pull
+#     cd ..
+#   else
+#     git clone $CODE_URL --branch $CODE_BRANCH $PLUGIN_NAME
+#     cd $PLUGIN_NAME
+#   fi
   cd $PLUGIN_NAME
 }
 

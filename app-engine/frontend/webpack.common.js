@@ -8,7 +8,6 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HappyPack = require('happypack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
@@ -25,9 +24,10 @@ module.exports = {
       test: /\.(js|jsx)$/,
       exclude: /node_modules/,
       include: [path.resolve(__dirname, 'src')],
-      use: {
-        loader: 'happypack/loader?id=babel',
-      },
+      use: [
+        'thread-loader',
+        'babel-loader'
+      ],
     },
     {
       test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
@@ -40,26 +40,35 @@ module.exports = {
     },
     {
       test: /\.css$/,
-      use: ['style-loader', 'css-loader']
+      use: [
+        'style-loader',
+        'thread-loader',
+        'css-loader'
+      ]
     },
     {
       test: /\.(ts|tsx)$/,
       exclude: /node_modules/,
-      use: [{
-        loader: 'babel-loader',
-        options: {
-          presets: [
-            '@babel/preset-env',
-            '@babel/preset-react',
-            '@babel/preset-typescript',
-          ],
-        },
-      }],
+      use: [
+        'thread-loader',
+        {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              '@babel/preset-env',
+              '@babel/preset-react',
+              '@babel/preset-typescript',
+            ],
+          },
+        }
+      ],
     },
     {
       test: /\.less$/,
       use: [{
         loader: 'style-loader',
+      }, {
+        loader: 'thread-loader',
       }, {
         loader: 'css-loader',
       }, {
@@ -93,6 +102,7 @@ module.exports = {
       exclude: /node_modules/,
       use: [
         MiniCssExtractPlugin.loader,
+        'thread-loader',
         {
           loader: 'css-loader',
           options: {
@@ -120,10 +130,6 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
   plugins: [
-    new HappyPack({
-      id: 'babel',
-      loaders: ['babel-loader?cacheDirectory'],
-    }),
     new MiniCssExtractPlugin({
       filename: '[name].[hash:8].css',
       chunkFilename: '[name].[hash:8].css',

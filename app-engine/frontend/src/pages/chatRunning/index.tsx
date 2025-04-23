@@ -194,7 +194,7 @@ const ChatRunning = () => {
         </div> :  
         <div className={`chat-running-container ${isPreview ? 'chat-running-full' : ''}`}>
           {isPreview ? <Login login={login} /> : <div className='chat-running-chat'>
-            <Button type='text' onClick={handleBack}>{t('return')}</Button>
+            <Button className='chat-btn-back' size='small' type='text' style={{ margin: '6px 12px' }} onClick={handleBack}>{t('return')}</Button>
             {plugin ? null : <span className='running-app-name'>{appInfo.name}</span>}
           </div>}
           <CommonChat pluginName={pluginName} />

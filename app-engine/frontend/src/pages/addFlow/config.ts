@@ -5,6 +5,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
+import i18n from '../../locale/i18n';
+import chatScreenshot from '../../assets/images/appConfig/chat-screenshot.jpg';
 const { origin } = window.location;
 let baseUrl = '';
 if (process.env.PACKAGE_MODE === 'spa') {
@@ -20,6 +22,20 @@ export const configMap = {
         node: "startNodeStart",
         urls: {
           customHistoryUrl: ""
+        },
+        appConfig: {
+          appChatStyle: {
+            name: 'appChatStyle',
+            label: 'appChatStyle',
+            options: [
+              {
+                value: 'default',
+                label: i18n.t('default'),
+                image: chatScreenshot,
+              },
+            ],
+            rules: [{required: true, message: 'appChatStyleCannotBeEmpty'}],
+          },
         }
       },
       {
@@ -96,6 +112,20 @@ export const configMap = {
         node: "startNodeStart",
         urls: {
           customHistoryUrl: `${baseUrl}/v1/api/public/genericables/68dc66a6185cf64c801e55c97fc500e4?limit=10&offset=0`
+        },
+        appConfig: {
+          appChatStyle: {
+            name: 'appChatStyle',
+            label: 'appChatStyle',
+            options: [
+              {
+                value: 'default',
+                label: i18n.t('default'),
+                image: chatScreenshot,
+              },
+            ],
+            rules: [{required: true, message: 'appChatStyleCannotBeEmpty'}],
+          },
         }
       },
       {

@@ -233,6 +233,8 @@
   "testTip2": "Debug the workflow to ensure it runs properly before release.",
   "debug": "Debug",
   "plsEnterRequiredItem": "Set mandatory parameters",
+  "expandConfig": "Expand config",
+  "collapseConfig":  "Collapse config",
   "flowChangeWarningContent": "The workflow configuration items have been modified. Debug the workflow again. The workflow can be released once it passes the debugging",
   "noMoreTips": "Do not remind me again",
   "plsEnterString": "Enter a string",
@@ -703,5 +705,8 @@
   "codeErrorInternal": "Internal server error, please try again later",
   "codeErrorGateway": "The current network connection is experiencing an issue. Please try again later",
   "codeErrorBusy": "The system is busy and in queue. Please try again later",
-  "codeErrorTimeout": "Request response timeout, please check your network connection and try again"
+  "codeErrorTimeout": "Request response timeout, please check your network connection and try again",
+  "appConfig": "App Configuration",
+  "appChatStyle": "App Interface Configuration",
+  "appChatStyleCannotBeEmpty": "App interface configuration cannot be empty"
 }

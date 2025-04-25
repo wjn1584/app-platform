@@ -10,11 +10,11 @@ import { Layout, Menu } from 'antd';
 import { MenuFoldOutlined } from '@ant-design/icons';
 import {
   Route,
-  useHistory,
+  useNavigate,
   useLocation,
-  Redirect,
-  Switch
-} from 'react-router-dom';
+  Navigate,
+  Routes
+} from 'react-router';
 import {
   routeList,
   flattenRoute,
@@ -42,7 +42,7 @@ const flattenRouteList = flattenRoute(routeList);
 const AppLayout: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [defaultActive, setDefaultActive] = useState<string[]>([])
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
   const location = useLocation();
   
   /**
@@ -154,19 +154,20 @@ const AppLayout: React.FC = () => {
       <Layout className={setClassName()}>
         <Provider store={store}>
           <Content style={{ padding: (layoutValidate() || isSpaMode()) ? '0 16px' : '0', background: colorBgContainer }}>
-            <Switch>
+            <Routes>
               {flattenRouteList.map((route) => (
                 <Route
-                  exact
                   path={route.key}
                   key={route.key}
-                  component={route.component}
+                  Component={route.component}
                 />
               ))}
-              <Route exact path='/' key='/' >
-                <Redirect to='/app-develop' />
-              </Route>
-            </Switch>
+              <Route
+                path='/'
+                key='/'
+                element={<Navigate to='/app-develop' />}
+              />
+            </Routes>
           </Content>
         </Provider>
       </Layout>

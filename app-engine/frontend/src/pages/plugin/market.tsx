@@ -18,7 +18,7 @@ import UploadToolDrawer from './upload/uploadTool';
 import EmptyItem from '@/components/empty/empty-item';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/store/hook';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import CreateWorkfowDrawer from './upload/createWorkflow';
 import type { MenuProps } from 'antd';
 import './styles/market.scss';
@@ -35,7 +35,7 @@ const MarketItems = ({ reload, readOnly }) => {
   const [loading, setLoading] = useState(false);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const isAutoOpen = useAppSelector((state) => state.commonStore.isAutoOpen);
-  const history = useHistory().push;
+  const navigate = useNavigate();
   const [openCreateDrawer, setOpenCreateDrawer] = useState(0);
   const currentUser = localStorage.getItem('currentUser') || '';
 
@@ -133,7 +133,7 @@ const MarketItems = ({ reload, readOnly }) => {
     },
     {
       key: '2',
-      label: <div onClick={() => history({ pathname: '/http' })}>{t('httpPlugin')}</div>,
+      label: <div onClick={() => navigate({ pathname: '/http' })}>{t('httpPlugin')}</div>,
     },
     {
       key: '3',

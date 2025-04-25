@@ -6,7 +6,7 @@
 
 import React, { useEffect, useState, useRef, useImperativeHandle } from 'react';
 import { Tooltip } from 'antd';
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router'
 import { getAppInfo } from '@/shared/http/aipp';
 import { ConfigFlowIcon } from '@/assets/icon';
 import { Message } from '@/shared/utils/message';
@@ -57,7 +57,7 @@ const AddFlow = (props) => {
     appInfo: type ? appInfo : flowInfo,
     setFlowInfo
   };
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
 
   // 初始化编排数据
   useEffect(() => {

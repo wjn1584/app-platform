@@ -6,7 +6,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Space, Drawer, message } from 'antd';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import {
   createEvalData,
   editEvalData,
@@ -64,7 +64,7 @@ const CreateSet = ({ visible, createCallback, type, detailInfo, realAppId }: pro
   
   useEffect(() => {
     setCreateOpen(visible);
-  });
+  }, []);
 
   useEffect(() => {
     if (type === 'edit') {

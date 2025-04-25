@@ -5,7 +5,6 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useImperativeHandle, useState, useRef, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import { Button, Input, Dropdown, Modal, Checkbox, Tooltip } from 'antd';
 import { SearchOutlined, DownOutlined } from '@ant-design/icons';
 import { setSpaClassName } from '@/shared/utils/common';
@@ -37,7 +36,6 @@ const AddKnowledge = (props) => {
   const [cachedKnowledgeList, setCachedKnowledgeList] = useState<any>([]);
   const searchName = useRef('');
   const checkData = useRef<any>([]);
-  const navigate = useHistory().push;
   const typeMap: any = {
     VECTOR: t('unstructuredData'),
     RDB: t('structuredData'),

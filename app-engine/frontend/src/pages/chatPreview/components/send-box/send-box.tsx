@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useEffect, useState, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { Checkbox } from 'antd';
 import { ChatUserIcon } from '@/assets/icon';
 import { ChatContext } from '@/pages/aippIndex/context';

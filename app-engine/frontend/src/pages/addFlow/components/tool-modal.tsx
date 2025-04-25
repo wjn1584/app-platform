@@ -8,7 +8,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Input, Modal, Select, Button, Empty, Spin, Tabs, Divider } from 'antd';
 import { Icons } from '@/components/icons';
 import Pagination from '@/components/pagination';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { handleClickAddToolNode } from '../utils';
 import ToolTable from './tool-table';
 import AddWaterFlow from './add-waterflow-drawer';
@@ -64,7 +64,7 @@ const ToolDrawer = (props) => {
   const [createWorkflowSignal, setCreateWorkflowSignal] = useState(false);
   const searchName = useRef<any>(undefined);
   const listType = useRef('owner');
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
   const [selectedSourceTab, setSelectedSourceTab] = useState(minePluginCategories?.[0]?.key);
   const [pluginCategory, setPluginCategory] = useState('mine');
 

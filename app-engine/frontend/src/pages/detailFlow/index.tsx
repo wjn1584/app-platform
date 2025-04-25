@@ -6,7 +6,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { LeftArrowIcon } from '@/assets/icon';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { getAppInfo } from '@/shared/http/aipp';
 import { JadeFlow } from '@fit-elsa/elsa-react';
 import { configMap } from '../addFlow/config';

@@ -5,6 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 import { Drawer, Button, Spin } from 'antd';
 import { setSpaClassName, getCookie } from '@/shared/utils/common';
 import { CloseOutlined, QuestionCircleOutlined } from '@ant-design/icons';
@@ -33,10 +34,12 @@ const PliginList = (props) => {
   const [loading, setLoading] = useState(false);
   const [pluginData, setPluginData] = useState([]);
   const [data, setData] = useState([]);
+  const { pluginId } = useParams();
+
   const getPluginList = async () => {
     setLoading(true);
     try {
-      const res:any = await getPluginDetail(props.match.params.pluginId);
+      const res:any = await getPluginDetail(pluginId);
       if (res.code === 0) {
         if (Array.isArray(res.data.pluginToolDataList)) {
           res.data.pluginToolDataList.forEach(item => item.creator = (res.data.creator || ''));

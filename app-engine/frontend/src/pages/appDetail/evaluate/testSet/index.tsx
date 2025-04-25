@@ -11,7 +11,7 @@ import { Table, Space } from 'antd';
 import CreateSet from './createTestset/createTestSet';
 import SetDetail from './detail';
 import { getEvalDataList, deleteDataSetData } from '@/shared/http/appEvaluate';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import Pagination from '@/components/pagination';
 import { getAppInfo } from '@/shared/http/aipp';
 import { useTranslation } from 'react-i18next';

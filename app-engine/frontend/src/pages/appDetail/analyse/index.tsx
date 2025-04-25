@@ -9,7 +9,7 @@ import * as echarts from 'echarts';
 import { Card, Select } from 'antd';
 import { getAnalysisData } from '@/shared/http/apps';
 import { getAppInfo } from '@/shared/http/aipp';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { setSpaClassName } from '@/shared/utils/common';
 import { useTranslation } from 'react-i18next';
 import { timeOption, top5UserOption, tradeOption, speedOption } from './common';

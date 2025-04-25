@@ -6,7 +6,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { toClipboard } from '@/shared/utils/common';
 import { Drawer, Tabs } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';

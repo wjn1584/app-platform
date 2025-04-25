@@ -5,11 +5,10 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { AppBoxIcon, CreateAppIcon } from '@/assets/icon';
+import { CreateAppIcon } from '@/assets/icon';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
-import { setOpenStar } from '@/store/chatStore/chatStore';
 import { findConfigValue } from '@/shared/utils/common';
 import { convertImgPath } from '@/common/util';
 import EditModal from '@/pages/components/edit-modal';
@@ -31,7 +30,7 @@ const ChatDetail = ({ showMask = false }) => {
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const openStar = useAppSelector((state) => state.chatCommonStore.openStar);
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
   const location = useLocation();
   let modalRef = useRef<any>();
   const isHomepage = location.pathname.includes('home');

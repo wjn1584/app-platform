@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useEffect, useState, useRef, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { Button } from 'antd';
 import { LeftArrowIcon, UploadIcon } from '@/assets/icon';
 import { updateAppInfo } from '@/shared/http/aipp';

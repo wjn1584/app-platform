@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useEffect, useState, useRef, useImperativeHandle  } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setValidateInfo } from '@/store/appInfo/appInfo';
 import AddKnowledge from './add-knowledge';

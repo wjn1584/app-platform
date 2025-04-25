@@ -6,7 +6,7 @@
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Spin } from 'antd';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import AddFlow from '../addFlow';
 import ConfigForm from '../configForm';
 import CommonChat from '../chatPreview/chatComminPage';

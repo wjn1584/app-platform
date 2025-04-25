@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Modal, Upload } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { ToTopOutlined } from '@ant-design/icons';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import { createAipp, uploadImage } from '@/shared/http/aipp';
 import { Message } from '@/shared/utils/message';
 import { useAppSelector } from '@/store/hook';
@@ -28,7 +28,7 @@ const CreateWorkflow = (props) => {
   const [imgPath, setImgPath] = useState('');
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const appId = useAppSelector((state) => state.appStore.appId);
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
 
   // 上传图片
   async function pictureUpload(file) {

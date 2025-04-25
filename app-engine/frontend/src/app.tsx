@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useEffect } from 'react';
-import { HashRouter, BrowserRouter } from 'react-router-dom';
+import { HashRouter, BrowserRouter } from 'react-router';
 import { ConfigProvider } from 'antd';
 import AppLayout from '@/components/layout/index';
 import zhCN from 'antd/lib/locale/zh_CN';

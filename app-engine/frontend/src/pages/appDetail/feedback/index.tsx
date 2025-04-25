@@ -6,7 +6,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, DatePicker, Drawer, Table } from 'antd';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { CloseOutlined } from '@ant-design/icons';
 import { feedbackType } from './model';

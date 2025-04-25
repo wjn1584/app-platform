@@ -7,7 +7,7 @@
 import React, { useState }from 'react';
 import { Drawer, Tag } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import { setSpaClassName } from '@/shared/utils/common';
 import { useAppSelector } from '@/store/hook';
 import { getAppInfoByVersion } from '@/shared/http/aipp';
@@ -23,7 +23,7 @@ import '../styles/tool-card.scss';
 const ToolCard = ({ pluginData, tenantId }: any) => {
   const { t } = useTranslation();
   const [isShow, setIsShow] = useState(false);
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
   const appId = useAppSelector((state) => state.appStore.appId);
 
   // 类型处理

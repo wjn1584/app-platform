@@ -6,7 +6,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Drawer, Timeline, Empty } from 'antd';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { CloseOutlined } from '@ant-design/icons';
 import { getVersion } from '@/shared/http/aipp';
 import { useTranslation } from "react-i18next";

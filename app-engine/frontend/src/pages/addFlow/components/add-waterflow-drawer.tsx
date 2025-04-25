@@ -6,7 +6,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Drawer, Form, Input, Button } from 'antd';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router';
 import { createAipp } from '@/shared/http/aipp';
 import { CloseOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
@@ -25,7 +25,7 @@ const AddWaterFlow = (props) => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const { tenantId, appId } = useParams();
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
 
   useEffect(() => {
     form.setFieldsValue({

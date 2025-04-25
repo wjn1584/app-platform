@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router';
 import { Button, Dropdown, Badge, Typography } from 'antd';
 import { LeftArrowIcon, UploadIcon } from '@/assets/icon';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
@@ -73,7 +73,7 @@ const ChoreographyHead = (props) => {
   let editRef = useRef<any>();
   let testRef = useRef<any>();
   const { tenantId, appId } = useParams();
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   // 按钮点击回调

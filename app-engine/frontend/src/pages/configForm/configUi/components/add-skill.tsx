@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useImperativeHandle, useState, useEffect, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Drawer, Tabs, Button, Input, Checkbox } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import { getPlugins } from '@/shared/http/plugin';
@@ -29,7 +29,7 @@ const AddSkill = (props) => {
   const [total, setTotal] = useState(0);
   const [pluginCategory, setPluginCategory] = useState(pluginItems[0].key);
   const [pluginData, setPluginData] = useState([]);
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
   const checkedList = useRef([]);
 
   useEffect(() => {

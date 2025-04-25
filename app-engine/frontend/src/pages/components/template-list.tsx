@@ -14,7 +14,7 @@ import AppCard from '@/components/appCard';
 import EditModal from '../../pages/components/edit-modal';
 import Empty from '@/components/empty/empty-item';
 import { getTemplateList } from '@/shared/http/appDev';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
 import { tabItems } from '../appDev/common';
 import './styles/template-list.scss'
@@ -30,7 +30,7 @@ import './styles/template-list.scss'
 
 const TemplateList = ({ tempalteRef, tabs }) => {
   const tenantId = TENANT_ID;
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [listLoading, setListLoading] = useState(true);

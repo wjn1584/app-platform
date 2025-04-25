@@ -6,7 +6,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { Modal, Input, Button } from 'antd';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { getHuggingFaceList } from '@/shared/http/appBuilder';
 import { useTranslation } from 'react-i18next';
 import { setSpaClassName } from '@/shared/utils/common';

@@ -7,7 +7,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Input, Dropdown, Modal, Spin, Tabs } from 'antd';
 import { QuestionCircleOutlined, DownOutlined } from '@ant-design/icons';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Icons } from '@/components/icons';
 import { exportApp } from '@/shared/http/aipp';
 import { deleteAppApi, queryAppDevApi } from '@/shared/http/appDev';
@@ -55,7 +55,7 @@ const AppDev: React.FC = () => {
   const currentApp = useRef<any>({});
   const tempalteListRef = useRef<any>(null);
   const readOnly = useAppSelector((state) => state.chatCommonStore.readOnly);
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
 
   // 应用导入点击回调
   function handleCreateClick() {

@@ -14,7 +14,7 @@ import {
 } from '@/shared/http/appEvaluate';
 import { TaskStatusE, RunStatus } from './model';
 import { useParams } from 'react-router';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import CreateModal from './create';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/locale/i18n';
@@ -75,7 +75,7 @@ const EvaluateTask = () => {
     pageSize: pageSize,
   });
   const [selectedList, setSelectedList] = useState<any[]>([]);
-  const history = useHistory().push;
+  const navigate = useNavigate();
   const detailInfo = JSON.parse(sessionStorage.getItem('evaluateDetails') as any)
 
   const paginationChange = (curPage: number, curPageSize: number) => {
@@ -107,7 +107,7 @@ const EvaluateTask = () => {
   };
   // 跳转详情
   const toDetails = (e: any) => {
-    history({
+    navigate({
       pathname: `/app-develop/${tenantId}/app-detail/add-flow/${e.workflowId}`,
       search: `?type=evaluate&appId=${appId}`,
     });
@@ -214,7 +214,7 @@ const EvaluateTask = () => {
   };
 
   const viewReport = (record: any) => {
-    history({
+    navigate({
       pathname: `/app-develop/${tenantId}/appDetail/${appId}/task/viewReport`,
       search: `?instance=${record?.instanceId}`,
     });

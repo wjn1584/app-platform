@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { useCallback, useMemo, useState } from 'react';
 import { pick, find, filter } from 'lodash';
 import { Message } from '@/shared/utils/message';

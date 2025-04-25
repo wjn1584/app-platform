@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { CloseOutlined, ToTopOutlined } from '@ant-design/icons';
 import { Button, Drawer, Form, Input, Upload } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useAppSelector } from '@/store/hook';
 import serviceConfig from '@/shared/http/httpConfig';
 import { createAipp, uploadImage } from '@/shared/http/aipp';
@@ -28,7 +28,7 @@ const CreateWorkfowDrawer = (props) => {
   const [fileName, setFileName] = useState(undefined);
   const [imgPath, setImgPath] = useState('');
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
 
   // 上传图片
   async function pictureUpload(file) {

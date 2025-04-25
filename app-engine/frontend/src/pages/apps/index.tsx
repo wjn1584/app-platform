@@ -11,7 +11,7 @@ import { Icons } from '@/components/icons';
 import { queryAppsApi } from '@/shared/http/apps';
 import AppCard from '@/components/appCard';
 import { debounce, getCookie, setSpaClassName } from '@/shared/utils/common';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { deleteAppApi } from '@/shared/http/appDev';
 import Pagination from '@/components/pagination';
 import Empty from '@/components/empty/empty-item';
@@ -22,7 +22,7 @@ import './index.scoped.scss';
 const Apps: React.FC = () => {
   const tenantId = TENANT_ID;
   const { t } = useTranslation();
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
   const [appData, setAppData] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);

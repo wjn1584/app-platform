@@ -6,7 +6,6 @@
 
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useLocation } from 'react-router';
-import { useParams } from 'react-router-dom';
 import { Spin } from 'antd';
 import { LeftArrowIcon } from '@/assets/icon';
 import { Message } from '@/shared/utils/message';

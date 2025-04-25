@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useState, useImperativeHandle, useRef } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router';
 import { Input, Modal, Button, Form } from 'antd';
 import { Message } from '@/shared/utils/message';
 import { appPublish, updateFlowInfo, getVersion } from '@/shared/http/aipp';
@@ -38,7 +38,7 @@ const PublishModal = (props) => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const editorRef = useRef<any>();
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
   
   const showModal = () => {
     form.setFieldsValue({

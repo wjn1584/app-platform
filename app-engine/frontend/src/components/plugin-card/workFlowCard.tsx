@@ -7,7 +7,7 @@
 import React, { useState, useEffect } from 'react';
 import { Dropdown, MenuProps, Tag, message } from 'antd';
 import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useAppSelector } from '@/store/hook';
 import { setSpaClassName } from '@/shared/utils/common';
 import { getAppInfoByVersion } from '@/shared/http/aipp';
@@ -21,7 +21,7 @@ import './style.scss';
 const WorkflowCard = ({ pluginData, type, getWaterFlowList }: any) => {
   const { t } = useTranslation();
   const [imgPath, setImgPath] = useState('');
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
 
   // 删除工具流

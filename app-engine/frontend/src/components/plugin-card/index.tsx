@@ -7,7 +7,7 @@
 import React, { useState } from 'react';
 import { Tag, message, Modal, Drawer, Dropdown } from 'antd';
 import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import { IconMap, PluginCardTypeE, PluginStatusTypeE, PluginCnType } from '@/pages/plugin/helper';
 import { deletePluginAPI } from '@/shared/http/plugin';
 import { setSpaClassName } from '@/shared/utils/common';
@@ -34,7 +34,7 @@ const PluginCard = ({ pluginData, cardType, getPluginList, pluginId, cardStatus,
   const [isShow, setIsShow] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
 
   const items = [
     {

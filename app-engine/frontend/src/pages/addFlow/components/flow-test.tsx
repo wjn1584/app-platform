@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { Drawer, Form, Alert, Spin, Tooltip } from 'antd';
 import { StartIcon, CloseIcon, RunIcon } from '@/assets/icon';
 import { Message } from '@/shared/utils/message';

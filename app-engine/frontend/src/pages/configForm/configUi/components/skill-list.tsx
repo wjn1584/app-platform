@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import EyeImg from '@/assets/images/eye_btn.svg';
 import CloseImg from '@/assets/images/close_btn.svg';

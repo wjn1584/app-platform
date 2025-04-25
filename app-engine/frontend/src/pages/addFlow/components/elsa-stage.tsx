@@ -6,7 +6,7 @@
 
 import React, { useEffect, useCallback, useState, useRef, useImperativeHandle, useContext } from 'react';
 import { Button, Alert, Spin } from 'antd';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { JadeFlow } from '@fit-elsa/elsa-react';
 import { validate } from '../utils';
 import AddKnowledge from '../../configForm/configUi/components/add-knowledge';

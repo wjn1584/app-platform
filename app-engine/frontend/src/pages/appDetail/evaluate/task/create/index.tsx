@@ -7,7 +7,7 @@
 import React from 'react';
 import { Modal, Form, Input } from 'antd';
 import { getEvaluateId } from '../../../../../shared/http/appEvaluate';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
 const CreateModal = (props: any) => {
@@ -15,7 +15,7 @@ const CreateModal = (props: any) => {
   const { isShow, setIsShow, detailInfo } = props;
   const [form] = Form.useForm();
   const { tenantId, appId } = useParams();
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
 
   const onOK = async () => {
     const validate = await form.validateFields();

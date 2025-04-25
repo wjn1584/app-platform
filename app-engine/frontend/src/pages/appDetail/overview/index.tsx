@@ -9,7 +9,7 @@ import { Modal, Button, Divider, Spin } from 'antd';
 import { getAppInfo, getAppInfoByVersion, exportApp } from '@/shared/http/aipp';
 import { deleteAppApi } from '@/shared/http/appDev';
 import { Message } from '@/shared/utils/message';
-import { useHistory, useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setAppInfo } from "@/store/appInfo/appInfo";
 import { findConfigValue } from '@/shared/utils/common';
@@ -32,7 +32,7 @@ import './style.scoped.scss';
  */
 const AppOverview: React.FC = () => {
   const { t } = useTranslation();
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
   const { appId, tenantId } = useParams();
   const [opening, setOpening] = useState('');
   const [open, setOpen] = useState('');

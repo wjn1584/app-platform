@@ -6,7 +6,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button, Modal, Spin } from 'antd';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { getAppInfo, getPublishAppId, getPreviewAppInfo } from '@/shared/http/aipp';
 import { setAppId, setAppInfo, setAippId, setAppVersion } from '@/store/appInfo/appInfo';
 import { setHistorySwitch } from '@/store/common/common';

@@ -6,7 +6,7 @@
 
 import React, { useEffect, useRef, useState, useContext, useImperativeHandle } from 'react';
 import { Input, Button, Popover, Tree, Empty, Dropdown, Modal } from 'antd';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { useLocation } from 'react-router';
 import {
   SwapOutlined,

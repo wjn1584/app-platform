@@ -6,7 +6,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { httpUrlMap } from '@/shared/http/httpConfig';
 import { convertImgPath } from '@/common/util';
 import fileImg from '@/assets/images/ai/file2.png';

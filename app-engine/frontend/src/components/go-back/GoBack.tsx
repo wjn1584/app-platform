@@ -5,11 +5,11 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Icons } from '../icons';
 
 const GoBack: React.FC<{ path, title }> = ({ path, title }) => {
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
   return (
     <div
       onClick={(): void => {

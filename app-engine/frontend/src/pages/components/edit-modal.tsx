@@ -6,7 +6,7 @@
 
 import React, { useEffect, useState, useImperativeHandle, useRef } from 'react';
 import { Input, Modal, Button, Form, Upload, Spin, Radio, Select } from 'antd';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { Message } from '@/shared/utils/message';
 import { uploadChatFile, updateAppInfo, createAipp, createAgent, templateCreateAipp } from '@/shared/http/aipp';
 import serviceConfig from '@/shared/http/httpConfig';

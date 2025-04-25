@@ -5,7 +5,6 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
 import { Button, Modal, Switch, Tooltip } from 'antd';
 import { Message } from '@/shared/utils/message';
 import { CloseOutlined } from '@ant-design/icons';

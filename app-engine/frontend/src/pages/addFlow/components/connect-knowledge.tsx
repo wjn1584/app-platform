@@ -7,7 +7,7 @@
 import React, { useState, useImperativeHandle, useEffect } from 'react';
 import { Modal, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useAppDispatch } from '@/store/hook';
 import { setIsAutoOpen } from '@/store/common/common';
 import { getConnectKnowledgeList } from '@/shared/http/appBuilder';
@@ -30,7 +30,7 @@ const DEFAULT_GROUP_ID = 'default';
 const ConnectKnowledge = ({ modelRef, groupId, updateGroupId }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const navigate = useHistory().push;
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [connectList, setConnectList] = useState([]);
   const [choseId, setChoseId] = useState(DEFAULT_GROUP_ID);

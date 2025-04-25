@@ -6,7 +6,7 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import { Checkbox } from 'antd';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { ChatContext } from '@/pages/aippIndex/context';
 import { useAppSelector } from '@/store/hook';
 import { convertImgPath } from '@/common/util';

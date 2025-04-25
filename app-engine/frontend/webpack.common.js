@@ -19,6 +19,11 @@ module.exports = {
     publicPath: './',
     path: path.resolve(__dirname, 'build'),
   },
+  ignoreWarnings: [
+    {
+      module: /fit\-elsa/
+    }
+  ],
   module: {
     rules: [{
       test: /\.(js|jsx)$/,

@@ -86,6 +86,10 @@
             <groupId>modelengine.fit.jane</groupId>
             <artifactId>aipp-genericable</artifactId>
         </dependency>
+        <dependency>
+            <groupId>modelengine.fit.jane</groupId>
+            <artifactId>aipp-service</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -142,7 +146,7 @@
                         <configuration>
                             <target>
                                 <copy file="${project.build.directory}/${project.build.finalName}.jar"
-                                      todir="../../../framework/fit/java/target/plugins"/>
+                                      todir="../../../build/plugins"/>
                             </target>
                         </configuration>
                         <goals>

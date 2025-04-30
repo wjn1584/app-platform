@@ -33,7 +33,6 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.opentelemetry.api.trace.Span;
-import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.dto.ModelListDto;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
@@ -128,6 +127,8 @@ import modelengine.fitframework.util.MapUtils;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
 import modelengine.jade.app.engine.base.service.UsrAppCollectionService;
+import modelengine.jade.knowledge.KnowledgeCenterService;
+import modelengine.jade.knowledge.dto.KnowledgeDto;
 import modelengine.jade.store.entity.transfer.PluginToolData;
 import modelengine.jade.store.service.AppService;
 import modelengine.jade.store.service.PluginService;
@@ -178,6 +179,8 @@ public class AppBuilderAppServiceImpl
     private static final String APP_BUILDER_DEFAULT_SERVICE_NAME = "#app_builder_default_service_name#";
 
     private static final String APP_BUILDER_DEFAULT_TAG = "#app_builder_default_tag#";
+
+    private static final String APP_BUILDER_DEFAULT_KNOWLEDGE_SET = "#app_builder_default_knowledge_set#";
 
     private static final String DEFAULT_APP_VERSION = "1.0.0";
 
@@ -253,6 +256,8 @@ public class AppBuilderAppServiceImpl
 
     private final String contextRoot;
 
+    private final KnowledgeCenterService knowledgeCenterService;
+
     public AppBuilderAppServiceImpl(AppBuilderAppFactory appFactory, AippFlowService aippFlowService,
             AppBuilderAppRepository appRepository, AppTemplateFactory templateFactory,
             @Value("${validation.task.name.length.maximum:64}") int nameLengthMaximum, MetaService metaService,
@@ -263,7 +268,7 @@ public class AppBuilderAppServiceImpl
             @Value("${export-meta}") Map<String, String> exportMeta, AppTypeService appTypeService,
             PluginToolService pluginToolService, PluginService pluginService,
             FlowDefinitionService flowDefinitionService, AippFlowDefinitionService aippFlowDefinitionService,
-            @Value("${app-engine.contextRoot}") String contextRoot) {
+            @Value("${app-engine.contextRoot}") String contextRoot, KnowledgeCenterService knowledgeCenterService) {
         this.nameLengthMaximum = nameLengthMaximum;
         this.appFactory = appFactory;
         this.templateFactory = templateFactory;
@@ -286,6 +291,7 @@ public class AppBuilderAppServiceImpl
         this.flowDefinitionService = flowDefinitionService;
         this.aippFlowDefinitionService = aippFlowDefinitionService;
         this.contextRoot = contextRoot;
+        this.knowledgeCenterService = knowledgeCenterService;
     }
 
     @Override
@@ -529,12 +535,16 @@ public class AppBuilderAppServiceImpl
     @Override
     @Fitable(id = "default")
     public Rsp<RangedResultSet<AppBuilderAppMetadataDto>> list(AppQueryCondition cond,
-            HttpClassicServerRequest httpRequest, String tenantId, long offset, int limit) {
-        List<AppBuilderAppMetadataDto> result = this.appRepository.selectWithLatestApp(cond, tenantId, offset, limit)
+            OperationContext context, long offset, int limit) {
+        if (cond == null) {
+            cond = new AppQueryCondition();
+        }
+        cond.setCreateBy(context.getOperator());
+        List<AppBuilderAppMetadataDto> result = this.appRepository.selectWithLatestApp(cond, context.getTenantId(), offset, limit)
                 .stream()
                 .map(this::buildAppMetaData)
                 .collect(Collectors.toList());
-        long total = this.appRepository.countWithLatestApp(tenantId, cond);
+        long total = this.appRepository.countWithLatestApp(context.getTenantId(), cond);
         return Rsp.ok(RangedResultSet.create(result, offset, limit, total));
     }
 
@@ -555,6 +565,7 @@ public class AppBuilderAppServiceImpl
                 .updateAt(app.getUpdateAt())
                 .appCategory(app.getAppCategory())
                 .tags(tags)
+                .appBuiltType(app.getAppBuiltType())
                 .build();
     }
 
@@ -572,16 +583,18 @@ public class AppBuilderAppServiceImpl
             templateApp.setAppCategory(dto.getAppCategory());
             templateApp.setAppBuiltType(dto.getAppBuiltType());
         }
+        KnowledgeDto firstKnowledge = this.knowledgeCenterService.getSupportKnowledges(context.getOperator()).get(0);
         AppBuilderFlowGraph flowGraph = templateApp.getFlowGraph();
         flowGraph.setAppearance(flowGraph.getAppearance()
                 .replace(APP_BUILDER_DEFAULT_MODEL_NAME, firstModelInfo[MODEL_LIST_SERVICE_NAME])
                 .replace(APP_BUILDER_DEFAULT_SERVICE_NAME, firstModelInfo[MODEL_LIST_SERVICE_NAME])
-                .replace(APP_BUILDER_DEFAULT_TAG, firstModelInfo[MODEL_LIST_TAG]));
-        return this.createAppWithTemplate(dto, templateApp, context, isUpgrade, AppTypeEnum.APP.name());
+                .replace(APP_BUILDER_DEFAULT_TAG, firstModelInfo[MODEL_LIST_TAG])
+                .replace(APP_BUILDER_DEFAULT_KNOWLEDGE_SET, firstKnowledge.getGroupId()));
+        return this.createAppWithTemplate(dto, templateApp, context, isUpgrade, AppTypeEnum.APP.name(), false);
     }
 
     private AppBuilderAppDto createAppWithTemplate(AppBuilderAppCreateDto dto, AppBuilderApp templateApp,
-            OperationContext context, boolean isUpgrade, String appType) {
+            OperationContext context, boolean isUpgrade, String appType, boolean isImport) {
         // 根据模板app复制app，仅需修改所有id
         // 优先copy下层内容，因为上层改变Id后，会影响下层对象的查询
         AppBuilderFlowGraph flowGraph = templateApp.getFlowGraph();
@@ -606,7 +619,7 @@ public class AppBuilderAppServiceImpl
         templateApp.setFlowGraphId(flowGraph.getId());
         templateApp.setType(appType);
         templateApp.setTenantId(context.getTenantId());
-        if (isUpgrade) {
+        if (!isImport) {
             templateApp.setState(AppState.INACTIVE.getName());
         }
         String preVersion = templateApp.getVersion();
@@ -1130,7 +1143,7 @@ public class AppBuilderAppServiceImpl
             AppBuilderApp templateApp = AppImExportUtil.convertToAppBuilderApp(appExportDto, context);
             this.appFactory.setRepositories(templateApp);
             AppBuilderAppDto appDto =
-                    this.createAppWithTemplate(null, templateApp, context, false, templateApp.getType());
+                    this.createAppWithTemplate(null, templateApp, context, false, templateApp.getType(), true);
             String iconContent =
                     iconAttr instanceof Map ? ObjectUtils.cast(ObjectUtils.<Map<String, Object>>cast(iconAttr)
                             .get("content")) : StringUtils.EMPTY;
@@ -1259,7 +1272,7 @@ public class AppBuilderAppServiceImpl
         } else {
             dto.setIcon(createDto.getIcon());
         }
-        return this.createAppWithTemplate(dto, appTemplate, context, false, AppTypeEnum.APP.code());
+        return this.createAppWithTemplate(dto, appTemplate, context, false, AppTypeEnum.APP.code(), false);
     }
 
     @Override

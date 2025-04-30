@@ -258,6 +258,10 @@
             <artifactId>caffeine</artifactId>
             <version>2.9.3</version>
         </dependency>
+        <dependency>
+            <groupId>modelengine.fit.jade.service</groupId>
+            <artifactId>knowledge-service</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -287,9 +291,9 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>modelengine.fit.jade.maven.plugin</groupId>
+                <groupId>org.fitframework.fel</groupId>
                 <artifactId>tool-maven-plugin</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>3.5.0-M2</version>
                 <executions>
                     <execution>
                         <id>build-tool</id>
@@ -309,7 +313,7 @@
                         <configuration>
                             <target>
                                 <copy file="${project.build.directory}/${project.build.finalName}.jar"
-                                      todir="../../../../framework/fit/java/target/plugins"/>
+                                      todir="../../../../build/plugins"/>
                             </target>
                         </configuration>
                         <goals>

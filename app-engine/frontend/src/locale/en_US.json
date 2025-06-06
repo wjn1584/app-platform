@@ -223,7 +223,7 @@
   "gotIt": "Got It",
   "successReleased": "Application released",
   "versionTip": "Invalid version format",
-  "releaseTip": "The version to be released will overwrite the historical version and cannot be rolled back",
+  "releaseTip": "The version to be released will overwrite the historical version",
   "releaseApplication": "Release Application",
   "releaseTip2": "Release the application only after it passes the debugging",
   "versionName": "Version",
@@ -953,5 +953,13 @@
   "reorganizeNodes": "Organize nodes",
   "zoomOut": "Zoom Out",
   "zoomIn": "Zoom In",
-  "formItemFieldTypeCannotBeEmpty": "Field type is required"
+  "formItemFieldTypeCannotBeEmpty": "Field type is required",
+  "addParallelTask": "Add Parallel Tasks",
+  "recover": "recover",
+  "exit": "exit",
+  "resetSucceed": "Reset Succeed",
+  "currentDraft": "Current Draft",
+  "loading": "Loading",
+  "noMore": "You've reached the end",
+  "latest": "latest"
 }

@@ -4,28 +4,21 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Spin } from 'antd';
 import { useParams } from 'react-router-dom';
 import AddFlow from '../addFlow';
 import ConfigForm from '../configForm';
 import CommonChat from '../chatPreview/chatComminPage';
 import ChoreographyHead from '../components/header';
-import { getAppInfo } from '@/shared/http/aipp';
-import { updateFormInfo } from '@/shared/http/aipp';
-import {
-  debounce,
-  getUiD,
-  getCurrentTime,
-  setSpaClassName,
-  getAppConfig
-} from '@/shared/utils/common';
+import { getAppInfo, updateFormInfo } from '@/shared/http/aipp';
+import { debounce, getCurrentTime, getUiD, setSpaClassName, getAppConfig } from '@/shared/utils/common';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setInspirationOpen } from '@/store/chatStore/chatStore';
-import { setAppId, setAippId, setAppInfo, setChoseNodeId, setValidateInfo  } from '@/store/appInfo/appInfo';
-import { setIsDebug } from "@/store/common/common";
-import { getUser } from '../helper';
-import { setTestStatus } from "@/store/flowTest/flowTest";
+import { setAippId, setAppId, setAppInfo, setChoseNodeId, setValidateInfo } from '@/store/appInfo/appInfo';
+import { setIsDebug } from '@/store/common/common';
+import { setTestStatus } from '@/store/flowTest/flowTest';
+import { RenderContext } from '@/pages/aippIndex/context';
 
 /**
  * 应用配置页面首页
@@ -40,6 +33,7 @@ const AippIndex = () => {
   const [spinning, setSpinning] = useState(false);
   const [saveTime, setSaveTime] = useState('');
   const [reloadInspiration, setReloadInspiration] = useState('');
+  const [workFlow, setWorkFlow] = useState('');
   const [showChat, setShowChat] = useState(false);
   const [messageChecked, setMessageCheck] = useState(false);
   const [showFlowChangeWarning, setShowFlowChangeWarning] = useState(false);
@@ -49,6 +43,8 @@ const AippIndex = () => {
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const pluginList = useAppSelector((state) => state.chatCommonStore.pluginList);
   const addFlowRef = useRef<any>(null);
+  const renderRef = useRef(false);
+  const elsaReadOnlyRef = useRef(false);
 
   const [pluginName, setPluginName] = useState('default');
   const [plugin, setPlugin] = useState();
@@ -81,8 +77,10 @@ const AippIndex = () => {
     dispatch(setInspirationOpen(false));
     // TODO: 待后端接口归一后调用 getUser()
     getAippDetails();
-    if (window.location.href.indexOf('type=chatWorkflow') !== -1) {
+    // TODO: 后续归一插件和应用创建工具流入口的时候需注意type
+    if (window.location.href.indexOf('type=workFlow') !== -1) {
       setShowElsa(true);
+      setWorkFlow('workFlow');
     };
     return () => {
       dispatch(setChoseNodeId(''));
@@ -121,9 +119,12 @@ const AippIndex = () => {
 
 
   // 修改aipp更新回调
-  const updateAippCallBack = (data) => {
-    if (data) {
-      aippRef.current = data;
+  const updateAippCallBack = (partialData) => {
+    if (partialData) {
+      aippRef.current = {
+        ...aippRef.current,
+        ...partialData
+      };
       dispatch(setAppInfo(aippRef.current));
     }
   }
@@ -175,19 +176,22 @@ const AippIndex = () => {
     <>
       <Spin spinning={spinning}>
         <div
-          className={`container ${showElsa ? 'layout-elsa-content' : ''} ${showChat ? 'layout-show-preview' : ''}`}>
-          <ChoreographyHead
-            appInfo={appInfo}
-            showElsa={showElsa}
-            saveTime={saveTime}
-            updateAippCallBack={updateAippCallBack}
-            mashupClick={elsaChange}
-            openDebug={openDebug}
-            addFlowRef={addFlowRef}
-          />
-          <div className={setSpaClassName('layout-content')}>
-            {showElsa ?
-              (
+          className={`container ${showElsa ? 'layout-elsa-content' : ''} ${showChat ? 'layout-show-preview' : ''}`}
+        >
+          <RenderContext.Provider value={{renderRef: renderRef, elsaReadOnlyRef: elsaReadOnlyRef}}>
+            {!workFlow ? (
+              <ChoreographyHead
+                appInfo={appInfo}
+                showElsa={showElsa}
+                saveTime={saveTime}
+                updateAippCallBack={updateAippCallBack}
+                mashupClick={elsaChange}
+                openDebug={openDebug}
+                addFlowRef={addFlowRef}
+              />
+            ) : null}
+            <div className={setSpaClassName('layout-content')}>
+              {showElsa ? (
                 <AddFlow
                   type='edit'
                   addFlowRef={addFlowRef}
@@ -197,9 +201,9 @@ const AippIndex = () => {
                   setSaveTime={setSaveTime}
                   showFlowChangeWarning={showFlowChangeWarning}
                   setShowFlowChangeWarning={setShowFlowChangeWarning}
+                  updateAippCallBack={updateAippCallBack}
                 />
-              ) :
-              (
+              ) : (
                 <ConfigForm
                   mashupClick={elsaChange}
                   configData={appInfo.configFormProperties || []}
@@ -211,13 +215,13 @@ const AippIndex = () => {
                   onChangeShowConfig={handleChangeShowConfig}
                 />
               )}
-            <CommonChat
-              showElsa={showElsa}
-              contextProvider={contextProvider}
-              previewBack={changeChat}
-              pluginName={pluginName}
-            />
-          </div>
+              <CommonChat
+                contextProvider={contextProvider}
+                previewBack={changeChat}
+                pluginName={pluginName}
+              />
+            </div>
+          </RenderContext.Provider>
         </div>
       </Spin>
     </>
